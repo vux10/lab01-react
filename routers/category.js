@@ -1,5 +1,6 @@
 const { Category } = require('../models/category')
 const express = require('express')
+const { Product } = require('../models/product')
 const router = express.Router()
 
 // get all category 
@@ -17,7 +18,10 @@ router.get(`/getAll`, async (req, res) => {
 // get category by id
 router.get(`/:id`, async (req, res) => {
     try {
-        const category = await Category.findById(req.params.id)
+        console.log(req.params.id)
+        const category = await Product.find({
+            category: req.params.id
+        })
         if (category.length === 0)
             res.status(404).json({
                 message: 'The category with the given ID was not found',
