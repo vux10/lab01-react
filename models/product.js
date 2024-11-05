@@ -29,7 +29,7 @@ const product_schema = mongoose.Schema({
         ref: 'Category',
         require: true,
     },
-    countInStock: {
+    quantity: {
         type: Number,
         require: true,
         min: 0,
