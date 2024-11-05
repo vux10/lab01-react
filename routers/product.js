@@ -34,10 +34,10 @@ router.post(`/`, uploadOptions.single('image'), async (req, res) => {
     if (!category) return res.status(400).send('Invalid category')
 
     const file = req.file
-    if (!file) return res.status(400).send('No image in the request!')
+    // if (!file) return res.status(400).send('No image in the request!')
 
-    const fileName = req.file.filename
-    const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`
+    // const fileName = req.file.filename
+    // const basePath = `${req.protocol}://${req.get('host')}/public/uploads/`
 
     // Let, not const
     let product = new Product(
@@ -45,12 +45,12 @@ router.post(`/`, uploadOptions.single('image'), async (req, res) => {
             _id: req.body.id,
             name: req.body.name,
             description: req.body.description,
-            image: `${basePath}${fileName}`,
+            // image: `${basePath}${fileName}`,
             images: req.body.images,
             brand: req.body.brand,
             price: req.body.price,
             category: req.body.category,
-            countInStock: req.body.countInStock,
+            quantity: req.body.quantity,
             rating: req.body.rating,
             numberReviews: req.body.numberReviews,
             isBestSeller: req.body.isBestSeller,
@@ -137,7 +137,7 @@ router.put('/:id', async (req, res) => {
             brand: req.body.brand,
             price: req.body.price,
             category: req.body.category,
-            countInStock: req.body.countInStock,
+            quantity: req.body.quantity,
             rating: req.body.rating,
             numberReviews: req.body.numberReviews,
             isBestSeller: req.body.isBestSeller,
@@ -153,20 +153,15 @@ router.delete('/:id', async (req, res) => {
     if (!mongoose.isValidObjectId(req.params.id)) {
         res.status(400).send('Invalid product id!')
     }
-    Product.findOneAndDelete(req.params.id)
-        .then((product) => {
-            if (product)
-                return res
-                    .status(200)
-                    .json({ success: true, message: 'The product is deleted!' })
-            else
-                return res
-                    .status(404)
-                    .json({ success: false, message: 'Product is not found!' })
-        })
-        .catch((err) => {
-            return res.status(500).json({ success: false, error: err })
-        })
+    // console.log('req.params: ', req.params)
+    const product = await Product.findOneAndDelete({
+        _id: req.params.id
+    })
+    // console.log('product: ', product)
+    if (product)
+        return res.status(200).json({ success: true, message: 'The product is delete!' })
+    else
+        return res.status(404).json({ success: false, message: 'Product is not found!' })
 })
 
 router.delete('/delete/all', async (req, res) => {

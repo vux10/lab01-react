@@ -1,5 +1,6 @@
 const { Category } = require('../models/category')
 const express = require('express')
+const { Product } = require('../models/product')
 const router = express.Router()
 
 // get all category 
@@ -17,12 +18,15 @@ router.get(`/getAll`, async (req, res) => {
 // get category by id
 router.get(`/:id`, async (req, res) => {
     try {
-        const category = await Category.findById(req.params.id)
-        if (category.length === 0)
-            res.status(404).json({
-                message: 'The category with the given ID was not found',
-            })
-        res.status(200).send(category)
+        console.log(req.params.id)
+        const productList = await Product.find({
+            category: req.params.id
+        })
+        // if (productList.length === 0)
+        //     res.status(404).json({
+        //         message: 'The category with the given ID was not found',
+        //     })
+        res.status(200).send(productList)
     } catch (error) {
         res.status(500).send({message: 'Error get category by id', error})
     }
@@ -30,6 +34,7 @@ router.get(`/:id`, async (req, res) => {
 
 // update category
 router.put('/:id', async (req, res) => {
+    console.log(req.params)
     const category = await Category.findByIdAndUpdate(
         req.params.id,
         {
@@ -60,21 +65,15 @@ router.post(`/`, async (req, res) => {
 })
 
 // delete by id
-router.delete('/:_id', (req, res) => {
-    Category.findOneAndDelete(req.params.id)
-        .then((category) => {
-            if (category)
-                return res
-                    .status(200)
-                    .json({ success: true, message: 'The category is delete!' })
-            else
-                return res
-                    .status(404)
-                    .json({ success: false, message: 'Category is not found!' })
-        })
-        .catch((err) => {
-            return res.status(400).json({ success: false, error: err })
-        })
+router.delete('/:_id', async(req, res) => {
+    console.log(req.params)
+    const category = await Category.findOneAndDelete({
+        _id: req.params._id
+    })
+    if (category)
+        return res.status(200).json({ success: true, message: 'The category is delete!' })
+    else
+        return res.status(404).json({ success: false, message: 'Category is not found!' })
 })
 
 module.exports = router
