@@ -30,9 +30,11 @@ const api = process.env.API_URL
 // Routers
 const category_router = require('./routers/category')
 const product_router = require('./routers/product')
+const cart_router = require('./routers/cart')
 
 app.use(`${api}/category`, category_router)
 app.use(`${api}/product`, product_router)
+app.use(`${api}/cart`, cart_router)
 
 // mongodb connect
 mongoose
