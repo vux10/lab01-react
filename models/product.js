@@ -18,12 +18,10 @@ const product_schema = mongoose.Schema({
         type: String,
         default: '',
     },
-    price: [
-        {
-            type: Number,
-            default: 0,
-        },
-    ],
+    price: {
+        type: Number,
+        default: 0,
+    },
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
